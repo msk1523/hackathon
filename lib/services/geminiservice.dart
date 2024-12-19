@@ -10,7 +10,7 @@ class GeminiService {
       : _apiKey = secretKey,
         _model = GenerativeModel(
           model: 'gemini-2.0-flash-exp',
-          apiKey: secretKey,
+          apiKey: apiKey,
           generationConfig: GenerationConfig(
             temperature: 0.8,
             topK: 40,
