@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hackathon/admin/admin_home.dart';
 import 'package:hackathon/screens/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -91,6 +92,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 40,
+            ),
+            GestureDetector(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AdminPage()));
+                },
+                child: Text(
+                  "Admin Login",
+                  style: TextStyle(color: Colors.white),
+                )),
           ],
         ),
       ),

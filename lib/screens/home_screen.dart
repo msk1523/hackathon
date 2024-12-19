@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon/screens/details.dart';
+import 'package:hackathon/screens/login_screen.dart';
 import 'package:hackathon/screens/profile.dart';
 import 'package:hackathon/services/llm.dart';
 
@@ -106,9 +107,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           SizedBox(
                             width: 20,
                           ),
-                          Icon(
-                            Icons.logout,
-                            color: Colors.black,
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LoginScreen(),
+                                ),
+                              );
+                            },
+                            child: Icon(
+                              Icons.logout,
+                              color: Colors.black,
+                            ),
                           ),
                         ],
                       )
