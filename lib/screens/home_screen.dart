@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hackathon/services/llm.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -62,9 +63,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       Row(
                         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Icon(
-                            Icons.chat,
-                            color: Colors.black,
+                          GestureDetector(
+                            //onTap: Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen())),
+                            child: Icon(
+                              Icons.chat,
+                              color: Colors.black,
+                            ),
                           ),
                           SizedBox(
                             width: 20,
