@@ -1,6 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hackathon/admin/admin_home.dart';
 import 'package:hackathon/firebase_options.dart';
+import 'package:hackathon/screens/donate.dart';
+import 'package:hackathon/screens/home_screen.dart';
 import 'package:hackathon/screens/login_screen.dart';
 
 void main() async {
@@ -20,7 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'ReliefLink',
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      home: Donate(),
     );
   }
 }

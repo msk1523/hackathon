@@ -16,7 +16,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<void> _sendMessage(String message) async {
     setState(() => _messages.add("You: $message"));
     final response = await http.post(
-      Uri.parse("http://localhost:8000"),
+      Uri.parse("https://llmserve-41486761940.asia-south1.run.app"),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({"query": message}),
     );
