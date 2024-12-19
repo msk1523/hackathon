@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'ReliefLink',
       debugShowCheckedModeBanner: false,
-      home: Donate(),
+      home: LoginScreen(),
     );
   }
 }

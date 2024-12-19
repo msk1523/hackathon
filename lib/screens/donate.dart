@@ -58,7 +58,11 @@ class _DonateState extends State<Donate> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Icon(Icons.arrow_back, color: Colors.black),
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Icon(Icons.arrow_back, color: Colors.black)),
                       Text("Donate",
                           style: TextStyle(
                               color: Colors.black,
