@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "919490484685",
+    "project_id": "relieflink-c903d",
+    "storage_bucket": "relieflink-c903d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:919490484685:android:d72921c84534f478ca8c84",
+        "android_client_info": {
+          "package_name": "com.example.hackathon"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCDSM0uHNr9CzQP7iAwO7263EER7F5ZjM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
