@@ -61,10 +61,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Row(
-                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GestureDetector(
-                            //onTap: Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen())),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ChatScreen(),
+                                ),
+                              );
+                            },
                             child: Icon(
                               Icons.chat,
                               color: Colors.black,
