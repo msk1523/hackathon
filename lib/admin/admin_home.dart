@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:hackathon/admin/admin_alarm_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:random_string/random_string.dart';
 
@@ -149,7 +150,20 @@ class _AdminPageState extends State<AdminPage> {
                       child: Text("Add to Awareness"),
                     ),
                   ],
-                )
+                ),
+              SizedBox(height: 40),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AdminAlarmPage()));
+                },
+                child: Text(
+                  "Alert Alarm",
+                  style: TextStyle(color: Colors.black, fontSize: 20),
+                ),
+              )
             ],
           ),
         ),

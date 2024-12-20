@@ -5,6 +5,7 @@ import 'package:hackathon/screens/login_screen.dart';
 import 'package:hackathon/screens/profile.dart';
 import 'package:hackathon/services/llm.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hackathon/screens/alert_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -299,6 +300,18 @@ class _HomeScreenState extends State<HomeScreen> {
     return FirebaseFirestore.instance
         .collection('awareness_content')
         .snapshots();
+  }
+
+  void _triggerAlarm() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AlertPage(
+          adminTriggered: false,
+          previousScreen: "HomeScreen",
+        ),
+      ),
+    );
   }
 
   @override
@@ -781,17 +794,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                   );
                                 }).toList()));
                           },
-                        ),
+                        )
                       ],
                     ),
                   ),
                   SizedBox(
                     height: 20,
                   ),
-                  Container(
-                    width: 150,
-                    height: 40,
-                    decoration: BoxDecoration(color: Colors.black),
+                  GestureDetector(
+                    onTap: () {
+                      _triggerAlarm();
+                    },
+                    child: Container(
+                      width: 150,
+                      height: 40,
+                      decoration: BoxDecoration(color: Colors.black),
+                      child: Center(
+                        child: Text(
+                          "Trigger Alarm",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ),
+                    ),
                   )
                 ],
               ),
