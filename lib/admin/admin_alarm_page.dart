@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hackathon/admin/admin_home.dart';
 import 'package:hackathon/screens/alert_page.dart';
 
 class AdminAlarmPage extends StatefulWidget {
@@ -405,7 +406,7 @@ class _AdminAlarmPageState extends State<AdminAlarmPage> {
                         if (location == null || location.isEmpty) {
                           return false;
                         }
-                        List<String> parts = location
+                        List<dynamic> parts = location
                             .split(',')
                             .map((part) => part.trim())
                             .toList();
@@ -455,18 +456,18 @@ class _AdminAlarmPageState extends State<AdminAlarmPage> {
       if (location == null || location.isEmpty) {
         return false;
       }
-      List<String> parts =
+      List<dynamic> parts =
           location.split(',').map((part) => part.trim()).toList();
-
       if (_selectedCountry == null ||
           _selectedState == null ||
           _selectedCity == null) {
         return false;
       }
-      return (parts.length == 3 &&
+
+      return parts.length == 3 &&
           parts[0] == _selectedCity &&
           parts[1] == _selectedState &&
-          parts[2] == _selectedCountry);
+          parts[2] == _selectedCountry;
     }).toList();
 
     for (var doc in filteredUsers) {

@@ -18,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? _selectedCountry;
   String? _selectedState;
   String? _selectedCity;
-
+  bool _isLoading = true;
   final List<String> _countries = [
     'USA',
     'India',
@@ -259,6 +259,36 @@ class _HomeScreenState extends State<HomeScreen> {
     ],
   };
 
+  Future<void> _loadUserLocation() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+      if (userDoc.exists && userDoc.data()!.containsKey('location')) {
+        final location = userDoc.get('location') as String;
+        List<String> parts =
+            location.split(',').map((part) => part.trim()).toList();
+        if (parts.length == 3) {
+          setState(() {
+            _selectedCity = parts[0];
+            _selectedState = parts[1];
+            _selectedCountry = parts[2];
+          });
+        }
+      }
+    } catch (e) {
+      print("Error Loading Location: $e");
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   void _updateLocation() async {
     if (_selectedCountry != null &&
         _selectedState != null &&
@@ -306,12 +336,16 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AlertPage(
-          adminTriggered: false,
-          previousScreen: "HomeScreen",
-        ),
+        builder: (context) =>
+            AlertPage(adminTriggered: false, previousScreen: "HomeScreen"),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserLocation();
   }
 
   @override
@@ -417,133 +451,138 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    height: 300,
+                    height: _isLoading ? 150 : 300,
                     decoration: BoxDecoration(
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     padding: EdgeInsets.all(10),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Help Us Locate You!",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          DropdownButtonFormField<String>(
-                            decoration: InputDecoration(
-                              hintText: "Select Country",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            value: _selectedCountry,
-                            items: _countries.map((country) {
-                              return DropdownMenuItem(
-                                value: country,
-                                child: Text(
-                                  country,
-                                  style: TextStyle(color: Colors.blue),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedCountry = value;
-                                _selectedState =
-                                    null; // Reset state when country changes
-                                _selectedCity = null; // Reset city too
-                              });
-                            },
-                          ),
-                          SizedBox(height: 10),
-                          if (_selectedCountry != null)
-                            DropdownButtonFormField<String>(
-                              decoration: InputDecoration(
-                                hintText: "Select State",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              value: _selectedState,
-                              items: (_states[_selectedCountry] ?? [])
-                                  .map((state) {
-                                return DropdownMenuItem(
-                                  value: state,
-                                  child: Text(
-                                    state,
-                                    style: TextStyle(color: Colors.blue),
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedState = value;
-                                  _selectedCity =
-                                      null; // Reset city when state changes
-                                });
-                              },
-                            ),
-                          SizedBox(height: 10),
-                          if (_selectedState != null)
-                            DropdownButtonFormField<String>(
-                              decoration: InputDecoration(
-                                hintText: "Select City",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              value: _selectedCity,
-                              items:
-                                  (_cities[_selectedState] ?? []).map((city) {
-                                return DropdownMenuItem(
-                                  value: city,
-                                  child: Text(
-                                    city,
-                                    style: TextStyle(color: Colors.blue),
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedCity = value;
-                                });
-                              },
-                            ),
-                          SizedBox(height: 10),
-                          GestureDetector(
-                            onTap: () {
-                              _updateLocation();
-                            },
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
+                    child: _isLoading
+                        ? Center(
+                            child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ))
+                        : SingleChildScrollView(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Icon(
-                                  Icons.location_on_outlined,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(width: 5),
                                 Text(
-                                  "Click here to update location",
+                                  "Help Us Locate You!",
                                   style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                DropdownButtonFormField<String>(
+                                  decoration: InputDecoration(
+                                    hintText: "Select Country",
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  value: _selectedCountry,
+                                  items: _countries.map((country) {
+                                    return DropdownMenuItem(
+                                      value: country,
+                                      child: Text(
+                                        country,
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selectedCountry = value;
+                                      _selectedState =
+                                          null; // Reset state when country changes
+                                      _selectedCity = null; // Reset city too
+                                    });
+                                  },
+                                ),
+                                SizedBox(height: 10),
+                                if (_selectedCountry != null)
+                                  DropdownButtonFormField<String>(
+                                    decoration: InputDecoration(
+                                      hintText: "Select State",
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    value: _selectedState,
+                                    items: (_states[_selectedCountry] ?? [])
+                                        .map((state) {
+                                      return DropdownMenuItem(
+                                        value: state,
+                                        child: Text(
+                                          state,
+                                          style: TextStyle(color: Colors.blue),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _selectedState = value;
+                                        _selectedCity =
+                                            null; // Reset city when state changes
+                                      });
+                                    },
+                                  ),
+                                SizedBox(height: 10),
+                                if (_selectedState != null)
+                                  DropdownButtonFormField<String>(
+                                    decoration: InputDecoration(
+                                      hintText: "Select City",
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    value: _selectedCity,
+                                    items: (_cities[_selectedState] ?? [])
+                                        .map((city) {
+                                      return DropdownMenuItem(
+                                        value: city,
+                                        child: Text(
+                                          city,
+                                          style: TextStyle(color: Colors.blue),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _selectedCity = value;
+                                      });
+                                    },
+                                  ),
+                                SizedBox(height: 10),
+                                GestureDetector(
+                                  onTap: () {
+                                    _updateLocation();
+                                  },
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.location_on_outlined,
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        "Click here to update location",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
                   ),
                   SizedBox(
                     height: 10,

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AlertPage extends StatefulWidget {
   final bool adminTriggered;
@@ -20,6 +22,7 @@ class _AlertPageState extends State<AlertPage> {
   int _remainingTime = 30;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
+  String? userId;
 
   @override
   void initState() {
@@ -71,7 +74,6 @@ class _AlertPageState extends State<AlertPage> {
             "Help is arriving on the way!",
           )));
         }
-
         timer.cancel();
       }
     });
@@ -85,9 +87,19 @@ class _AlertPageState extends State<AlertPage> {
     super.dispose();
   }
 
-  void _iAmSafe() {
+  void _iAmSafe() async {
     _stopAlarm();
     Navigator.pop(context);
+    try {
+      if (widget.adminTriggered) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .set({'isSafe': true}, SetOptions(merge: true));
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
   }
 
   @override
